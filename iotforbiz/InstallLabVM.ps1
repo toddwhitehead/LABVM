@@ -53,5 +53,12 @@ Invoke-WebRequest $zipDownload -OutFile $downloadedFile
 Add-Type -assembly "system.io.compression.filesystem"
 [io.compression.zipfile]::ExtractToDirectory($downloadedFile, $vmFolder)
 
+#Bring down Nodev8
+$zipDownload = "https://nodejs.org/dist/latest-v8.x/node-v8.14.0-win-x64.zip"
+$downloadedFile = "D:\nodev8.zip"
+$vmFolder = "C:\Program Files"
+Invoke-WebRequest $zipDownload -OutFile $downloadedFile
+[io.compression.zipfile]::ExtractToDirectory($downloadedFile, $vmFolder)
+
 #Reboot
 Restart-Computer
