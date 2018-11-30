@@ -13,7 +13,6 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.We
 $Packages = 'googlechrome',`
             'docker-for-windows',`
             'postman',`
-            'nodejs.install',`
             'visualstudiocode',`
             'git',`
             'visualstudio2017community',`
