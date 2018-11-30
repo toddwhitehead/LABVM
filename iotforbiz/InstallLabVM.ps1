@@ -1,3 +1,4 @@
+
 #Fix RDP Issue
 $HKLM = "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp"
 Set-ItemProperty -Path $HKLM -Name "SecurityLayer" -Value 0
@@ -44,19 +45,27 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; & 'C:\Program Files\Microsoft 
 #Add Demo User to docker group
 Add-LocalGroupMember -Member demouser -Group docker-users
 
-#Bring down Desktop Shortcuts
-$zipDownload = "https://github.com/solliancenet/LABVM/blob/master/iotforbiz/shortcuts.zip?raw=true"
-$downloadedFile = "D:\shortcuts.zip"
-$vmFolder = "C:\Users\Public\Desktop"
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-Invoke-WebRequest $zipDownload -OutFile $downloadedFile
-Add-Type -assembly "system.io.compression.filesystem"
-[io.compression.zipfile]::ExtractToDirectory($downloadedFile, $vmFolder)
+
 
 #Bring down Nodev8
 $zipDownload = "https://nodejs.org/dist/latest-v8.x/node-v8.14.0-win-x64.zip"
 $downloadedFile = "D:\nodev8.zip"
 $vmFolder = "C:\Program Files"
+
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Invoke-WebRequest $zipDownload -OutFile $downloadedFile
+Add-Type -assembly "system.io.compression.filesystem"
+[io.compression.zipfile]::ExtractToDirectory($downloadedFile, $vmFolder)
+
+#Add node directory to the path
+$Old_Path=(Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name Path).Path #Save old Path variable value
+Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment' -Name PATH -Value ($Old_Path += ';C:\Program Files\node-v8.14.0-win-x64') #Append new path to existing path variable
+
+#Bring down Desktop Shortcuts
+$zipDownload = "https://github.com/solliancenet/LABVM/blob/master/iotforbiz/shortcuts.zip?raw=true"
+$downloadedFile = "D:\shortcuts.zip"
+$vmFolder = "C:\Users\Public\Desktop"
+
 Invoke-WebRequest $zipDownload -OutFile $downloadedFile
 [io.compression.zipfile]::ExtractToDirectory($downloadedFile, $vmFolder)
 
